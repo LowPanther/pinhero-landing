@@ -72,10 +72,11 @@ export default function LandingPage() {
               Launching first in Johannesburg
             </p>
             <h1 className="text-4xl md:text-5xl font-extrabold leading-tight" style={{ color: "var(--text-secondary)" }}>
-              Discover the city around you, one pin at a time
+              What's happening around you - right now
             </h1>
             <p className="mt-4 text-lg max-w-xl">
-              Drop a pin, see what’s nearby, and act in the moment — food, events, services, and secret spots.
+              PinHero is a live, people-powered feed of pop-ups, flash deals, micro-events, and nearby help.
+	      Drop a pin and act in seconds - no planning, no endless searching.
             </p>
 
             {/* Audience Switcher */}
@@ -236,64 +237,127 @@ export default function LandingPage() {
 /* ---------- Components ---------- */
 
 function SignupCard({ audience }: { audience: "users" | "businesses" }) {
+  const borderStyle = { borderColor: "var(--border)" };
+
+  if (audience === "users") {
+    return (
+      <div className="mt-6 p-4 bg-white/70 backdrop-blur rounded-2xl border shadow-sm max-w-lg" style={borderStyle}>
+        <h3 className="font-semibold" style={{ color: "var(--text-secondary)" }}>Join the user waitlist</h3>
+        <p className="text-sm mb-3">Get early access and perks when PinHero goes live.</p>
+
+        {/* USERS FORM */}
+        <form action="/api/join" method="POST" className="grid gap-2">
+          {/* required by server */}
+          <input type="hidden" name="audience" value="users" />
+          {/* optional honeypot (keeps bots out) */}
+          <input type="text" name="_hp" tabIndex={-1} autoComplete="off" className="hidden" />
+
+          <input
+            className="border rounded-xl px-3 py-3"
+            placeholder="Email address"
+            type="email"
+            name="email"
+            required
+            style={borderStyle}
+          />
+          <input
+            className="border rounded-xl px-3 py-3"
+            placeholder="City (e.g., Johannesburg)"
+            name="city"
+            style={borderStyle}
+          />
+          <textarea
+            className="border rounded-xl px-3 py-3 text-sm"
+            placeholder="What kind of places or experiences would you love to discover with PinHero? (Optional)"
+            name="discover"
+            rows={2}
+            style={borderStyle}
+          />
+          <textarea
+            className="border rounded-xl px-3 py-3 text-sm"
+            placeholder="What would make PinHero most valuable for you? (Optional)"
+            name="value"
+            rows={2}
+            style={borderStyle}
+          />
+          <button type="submit" className="px-5 py-3 rounded-xl text-white hover:opacity-95" style={{ backgroundColor: "var(--brand-primary)" }}>
+            Join
+          </button>
+        </form>
+      </div>
+    );
+  }
+
+  // audience === "businesses"
   return (
-    <div className="mt-6 p-4 bg-white/70 backdrop-blur rounded-2xl border shadow-sm max-w-lg" style={{ borderColor: "var(--border)" }}>
-      {audience === "users" ? (
-        <>
-          <h3 className="font-semibold" style={{ color: "var(--text-secondary)" }}>
-            Join the user waitlist
-          </h3>
-          <p className="text-sm mb-3">Get early access and perks when PinHero goes live.</p>
+    <div className="mt-6 p-4 bg-white/70 backdrop-blur rounded-2xl border shadow-sm max-w-lg" style={borderStyle}>
+      <h3 className="font-semibold" style={{ color: "var(--text-secondary)" }}>Register business interest</h3>
+      <p className="text-sm mb-3">Be first to unlock on-the-minute reach to nearby customers.</p>
 
-          {/* USERS FORM */}
-          <form action="/api/join" method="POST" className="grid gap-2">
-            <input type="hidden" name="audience" value="users" />
-            <input name="email" className="border rounded-xl px-3 py-3" placeholder="Email address" type="email" required style={{ borderColor: "var(--border)" }} />
-            <input name="city" className="border rounded-xl px-3 py-3" placeholder="City (e.g., Johannesburg)" style={{ borderColor: "var(--border)" }} />
-            <textarea name="discover" className="border rounded-xl px-3 py-3 text-sm" placeholder="What kind of places or experiences would you love to discover with PinHero? (Optional)" rows={2} style={{ borderColor: "var(--border)" }} />
-            <textarea name="value" className="border rounded-xl px-3 py-3 text-sm" placeholder="What would make PinHero most valuable for you? (Optional)" rows={2} style={{ borderColor: "var(--border)" }} />
-            {/* Honeypot field (hidden from humans) */}
-            <input name="_hp" className="hidden" tabIndex={-1} autoComplete="off" />
-            <button type="submit" className="px-5 py-3 rounded-xl text-white hover:opacity-95" style={{ backgroundColor: "var(--brand-primary)" }}>
-              Join
-            </button>
-          </form>
-        </>
-      ) : (
-        <>
-          <h3 className="font-semibold" style={{ color: "var(--text-secondary)" }}>
-            Register business interest
-          </h3>
-          <p className="text-sm mb-3">Be first to unlock on-the-minute reach to nearby customers.</p>
+      {/* BUSINESSES FORM */}
+      <form action="/api/join" method="POST" className="grid gap-2">
+        {/* required by server */}
+        <input type="hidden" name="audience" value="businesses" />
+        {/* optional honeypot */}
+        <input type="text" name="_hp" tabIndex={-1} autoComplete="off" className="hidden" />
 
-          {/* BUSINESSES FORM */}
-          <form action="/api/join" method="POST" className="grid gap-2">
-            <input type="hidden" name="audience" value="businesses" />
-            <input name="email" className="border rounded-xl px-3 py-3" placeholder="Work email" type="email" required style={{ borderColor: "var(--border)" }} />
-            <input name="businessName" className="border rounded-xl px-3 py-3" placeholder="Business name" style={{ borderColor: "var(--border)" }} />
-            <input name="city" className="border rounded-xl px-3 py-3" placeholder="City (e.g., Johannesburg)" style={{ borderColor: "var(--border)" }} />
-            <textarea name="hope" className="border rounded-xl px-3 py-3 text-sm" placeholder="What would you hope PinHero brings to your business? (Optional)" rows={2} style={{ borderColor: "var(--border)" }} />
-            <textarea name="challenge" className="border rounded-xl px-3 py-3 text-sm" placeholder="What’s your biggest challenge in attracting nearby customers? (Optional)" rows={2} style={{ borderColor: "var(--border)" }} />
-            {/* Honeypot field */}
-            <input name="_hp" className="hidden" tabIndex={-1} autoComplete="off" />
-            <button type="submit" className="px-5 py-3 rounded-xl text-white hover:opacity-95" style={{ backgroundColor: "var(--brand-primary)" }}>
-              Join Partner List
-            </button>
-          </form>
-        </>
-      )}
+        <input
+          className="border rounded-xl px-3 py-3"
+          placeholder="Work email"
+          type="email"
+          name="email"
+          required
+          style={borderStyle}
+        />
+        <input
+          className="border rounded-xl px-3 py-3"
+          placeholder="Business name"
+          name="businessName" /* not stored server-side yet, fine to keep */
+          style={borderStyle}
+        />
+        <input
+          className="border rounded-xl px-3 py-3"
+          placeholder="City (e.g., Johannesburg)"
+          name="city"
+          style={borderStyle}
+        />
+        <textarea
+          className="border rounded-xl px-3 py-3 text-sm"
+          placeholder="What would you hope PinHero brings to your business? (Optional)"
+          name="hope"
+          rows={2}
+          style={borderStyle}
+        />
+        <textarea
+          className="border rounded-xl px-3 py-3 text-sm"
+          placeholder="What’s your biggest challenge in attracting nearby customers? (Optional)"
+          name="challenge"
+          rows={2}
+          style={borderStyle}
+        />
+        <button type="submit" className="px-5 py-3 rounded-xl text-white hover:opacity-95" style={{ backgroundColor: "var(--brand-primary)" }}>
+          Join Partner List
+        </button>
+      </form>
     </div>
   );
 }
 
 function SignupInline() {
+  // Treat inline as a simple "users" capture by default
   return (
     <form action="/api/join" method="POST" className="grid md:grid-cols-[1fr_auto] gap-3 max-w-xl mx-auto">
-      {/* default to users for the inline CTA */}
       <input type="hidden" name="audience" value="users" />
-      <input name="email" type="email" className="border rounded-xl px-4 py-3" placeholder="Your email" required style={{ borderColor: "var(--border)" }} />
-      {/* Honeypot */}
-      <input name="_hp" className="hidden" tabIndex={-1} autoComplete="off" />
+      <input type="text" name="_hp" tabIndex={-1} autoComplete="off" className="hidden" />
+
+      <input
+        type="email"
+        name="email"
+        required
+        className="border rounded-xl px-4 py-3"
+        placeholder="Your email"
+        style={{ borderColor: "var(--border)" }}
+      />
       <button className="px-6 py-3 rounded-xl text-white hover:opacity-95" style={{ backgroundColor: "var(--brand-primary)" }}>
         Join the Waitlist
       </button>
