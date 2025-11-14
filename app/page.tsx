@@ -1,12 +1,125 @@
 "use client";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import "./landing.css"; // classes defined above
+
+// Content mapping for different audiences
+const content = {
+  users: {
+    hero: {
+      eyebrow: "Launching first in Johannesburg",
+      title: "What's happening around you — right now",
+      lead: "PinHero helps you uncover local spots, on-the-minute events, and deals. Share your own discoveries and see what others around you recommend."
+    },
+    stats: [
+      { kpi: "2,000+", label: "discoveries shared in testing" },
+      { kpi: "50+", label: "businesses on the platform" },
+      { kpi: "<10s", label: "time to discover nearby" },
+      { kpi: "1 app", label: "to find, decide & act" }
+    ],
+    benefits: {
+      title: "Why you'll love PinHero",
+      subtitle: "Built for real life — quick decisions, local vibes, and on-the-minute moments.",
+      cards: [
+        { title: "Instant discovery", desc: "Open the app and your feed updates automatically with what's happening around you right now." },
+        { title: "Real-time value", desc: "Catch spontaneous deals, events, and pop-ups when they're actually happening." },
+        { title: "Discover with friends", desc: "Connect with friends and see what they're discovering nearby — make plans together in real-time." }
+      ]
+    },
+    howItWorks: {
+      title: "How it works",
+      steps: [
+        { title: "Open the app", desc: "Your location is automatically detected and your feed updates with nearby happenings." },
+        { title: "Browse your feed", desc: "Restaurants, events, deals, and more — all curated by proximity and time." },
+        { title: "Act in seconds", desc: "Call, navigate, book, or redeem — straight from PinHero." }
+      ]
+    },
+    cta: {
+      title: "Be first in line",
+      subtitle: "Join the waitlist and get early access when we open the gates in your city.",
+      note: "We'll prioritise early signups in Johannesburg."
+    },
+    faqs: [
+      { q: "Is the app free for users?", a: "Yes. PinHero will be free for consumers at launch." },
+      { q: "When are you launching?", a: "We're rolling out city by city. Johannesburg first, with other metros to follow." },
+      { q: "Can businesses sign up too?", a: "Absolutely. Use the Business toggle above to register your interest and get partner updates." }
+    ]
+  },
+  businesses: {
+    hero: {
+      eyebrow: "Launching first in Johannesburg",
+      title: "Reach nearby customers — on the minute",
+      lead: "PinHero helps businesses connect with customers who are actively looking right now. Show up when it matters most — when they're nearby and ready to act."
+    },
+    stats: [
+      { kpi: "50+", label: "businesses already interested" },
+      { kpi: "2,000+", label: "active users in testing" },
+      { kpi: "Real-time", label: "customer discovery" },
+      { kpi: "On-demand", label: "local reach" }
+    ],
+    benefits: {
+      title: "Why businesses love PinHero",
+      subtitle: "Built for real-time customer connection — reach people when they're nearby and ready to engage.",
+      cards: [
+        { title: "Instant visibility", desc: "Show up in nearby customers' feeds automatically when they open the app — no ads needed." },
+        { title: "On-the-minute promotions", desc: "Post flash deals and events that appear to customers right when they're looking nearby." },
+        { title: "Targeted reach", desc: "Connect with customers who are actively searching in your area — higher intent, better conversions." }
+      ]
+    },
+    howItWorks: {
+      title: "How it works",
+      steps: [
+        { title: "List your business", desc: "Add your business to PinHero and set your location, hours, and offerings." },
+        { title: "Customers discover you", desc: "When customers open the app nearby, your business appears in their feed automatically." },
+        { title: "They act immediately", desc: "Customers can call, navigate, book, or redeem offers — straight from the app." }
+      ]
+    },
+    cta: {
+      title: "Join the partner program",
+      subtitle: "Get early access to PinHero's business platform and start reaching nearby customers.",
+      note: "We'll prioritise early signups in Johannesburg."
+    },
+    faqs: [
+      { q: "How much does it cost?", a: "Pricing details will be shared with early partners. Contact us to learn more." },
+      { q: "When can I start using it?", a: "We're rolling out city by city. Johannesburg first, with other metros to follow." },
+      { q: "What types of businesses can join?", a: "Any local business — restaurants, shops, services, events, and more. If you serve customers nearby, PinHero can help." }
+    ]
+  }
+};
 
 export default function LandingPage() {
   const [audience, setAudience] = useState<"users" | "businesses">("users");
+  const [showModal, setShowModal] = useState(false);
+
+  // Check localStorage on mount and show modal if no choice exists
+  useEffect(() => {
+    const savedAudience = localStorage.getItem("pinhero-audience") as "users" | "businesses" | null;
+    if (savedAudience) {
+      setAudience(savedAudience);
+    } else {
+      setShowModal(true);
+    }
+  }, []);
+
+  const handleAudienceSelect = (selected: "users" | "businesses") => {
+    setAudience(selected);
+    localStorage.setItem("pinhero-audience", selected);
+    setShowModal(false);
+  };
+
+  const handleAudienceChange = (newAudience: "users" | "businesses") => {
+    setAudience(newAudience);
+    localStorage.setItem("pinhero-audience", newAudience);
+  };
+
+  const currentContent = content[audience];
 
   return (
     <div>
+      {/* Audience Selection Modal */}
+      {showModal && (
+        <AudienceModal onSelect={handleAudienceSelect} />
+      )}
+
       {/* Top Bar */}
       <nav className="container topbar">
         <div className="brand">
@@ -17,6 +130,22 @@ export default function LandingPage() {
           <a href="#how">How it works</a>
           <a href="#benefits">Benefits</a>
           <a href="#faq">FAQ</a>
+          <div className="audience-switcher-nav">
+            <button
+              className={audience === "users" ? "active" : ""}
+              onClick={() => handleAudienceChange("users")}
+              type="button"
+            >
+              For Users
+            </button>
+            <button
+              className={audience === "businesses" ? "active" : ""}
+              onClick={() => handleAudienceChange("businesses")}
+              type="button"
+            >
+              For Businesses
+            </button>
+          </div>
           <a href="#join" className="button primary sm">Join Waitlist</a>
         </div>
       </nav>
@@ -26,29 +155,9 @@ export default function LandingPage() {
         <div className="hero-gradient" />
         <div className="container hero-grid">
           <div className="hero-copy">
-            <p className="eyebrow">Launching first in Johannesburg</p>
-            <h1 className="title">What’s happening around you — right now</h1>
-            <p className="lead">
-            PinHero helps you uncover local spots, on-the-minute events, and deals. Share your own discoveries and see what others around you recommend.
-            </p>
-
-            {/* Audience Switcher */}
-            <div className="switcher">
-              <button
-                className={`pill ${audience === "users" ? "active" : ""}`}
-                onClick={() => setAudience("users")}
-                type="button"
-              >
-                I’m a user
-              </button>
-              <button
-                className={`pill ${audience === "businesses" ? "active" : ""}`}
-                onClick={() => setAudience("businesses")}
-                type="button"
-              >
-                I’m a business
-              </button>
-            </div>
+            <p className="eyebrow">{currentContent.hero.eyebrow}</p>
+            <h1 className="title">{currentContent.hero.title}</h1>
+            <p className="lead">{currentContent.hero.lead}</p>
 
             <SignupCard audience={audience} />
             <div className="trust">No spam. Unsubscribe anytime. We'll email when early access opens.</div>
@@ -59,24 +168,21 @@ export default function LandingPage() {
       {/* Stats */}
       <section className="section">
         <div className="container stats">
-          <Stat kpi="2,000+" label="discoveries shared in testing" />
-          <Stat kpi="50+" label="businesses expressed interest" />
-          <Stat kpi="<10s" label="time to discover nearby" />
-          <Stat kpi="1 app" label="to find, decide & act" />
+          {currentContent.stats.map((stat, i) => (
+            <Stat key={i} kpi={stat.kpi} label={stat.label} />
+          ))}
         </div>
       </section>
 
       {/* Benefits */}
       <section id="benefits" className="section alt">
         <div className="container">
-          <h2 className="h2">Why you’ll love PinHero</h2>
-          <p className="center muted">
-            Built for real life — quick decisions, local vibes, and on-the-minute moments.
-          </p>
+          <h2 className="h2">{currentContent.benefits.title}</h2>
+          <p className="center muted">{currentContent.benefits.subtitle}</p>
           <div className="cards">
-            <Card title="Instant discovery" desc="Open the app and your feed updates automatically with what's happening around you right now." />
-            <Card title="Real-time value" desc="Catch spontaneous deals, events, and pop-ups when they're actually happening." />
-            <Card title="Discover with friends" desc="Connect with friends and see what they're discovering nearby — make plans together in real-time." />
+            {currentContent.benefits.cards.map((card, i) => (
+              <Card key={i} title={card.title} desc={card.desc} />
+            ))}
           </div>
         </div>
       </section>
@@ -84,11 +190,11 @@ export default function LandingPage() {
       {/* How it works */}
       <section id="how" className="section">
         <div className="container">
-          <h2 className="h2">How it works</h2>
+          <h2 className="h2">{currentContent.howItWorks.title}</h2>
           <div className="steps">
-            <Step n={1} title="Open the app" desc="Your location is automatically detected and your feed updates with nearby happenings." />
-            <Step n={2} title="Browse your feed" desc="Restaurants, events, deals, and more — all curated by proximity and time." />
-            <Step n={3} title="Act in seconds" desc="Call, navigate, book, or redeem — straight from PinHero." />
+            {currentContent.howItWorks.steps.map((step, i) => (
+              <Step key={i} n={i + 1} title={step.title} desc={step.desc} />
+            ))}
           </div>
         </div>
       </section>
@@ -96,10 +202,10 @@ export default function LandingPage() {
       {/* CTA */}
       <section id="join" className="section alt">
         <div className="container center">
-          <h3 className="h3">Be first in line</h3>
-          <p className="muted">Join the waitlist and get early access when we open the gates in your city.</p>
-          <SignupInline />
-          <p className="tiny muted">We’ll prioritise early signups in Johannesburg.</p>
+          <h3 className="h3">{currentContent.cta.title}</h3>
+          <p className="muted">{currentContent.cta.subtitle}</p>
+          <SignupInline audience={audience} />
+          <p className="tiny muted">{currentContent.cta.note}</p>
         </div>
       </section>
 
@@ -108,9 +214,9 @@ export default function LandingPage() {
         <div className="container">
           <h2 className="h2">FAQ</h2>
           <div className="faqs">
-            <Faq q="Is the app free for users?" a="Yes. PinHero will be free for consumers at launch." />
-            <Faq q="When are you launching?" a="We’re rolling out city by city. Johannesburg first, with other metros to follow." />
-            <Faq q="Can businesses sign up too?" a="Absolutely. Use the Business toggle above to register your interest and get partner updates." />
+            {currentContent.faqs.map((faq, i) => (
+              <Faq key={i} q={faq.q} a={faq.a} />
+            ))}
           </div>
         </div>
       </section>
@@ -126,9 +232,9 @@ export default function LandingPage() {
             <p className="tiny muted">Local discovery, on-the-minute. © {new Date().getFullYear()} PinHero.</p>
           </div>
           <div className="links">
-            <a href="#">Privacy</a>
-            <a href="#">Terms</a>
-            <a href="#">Contact</a>
+            <a href="/privacy">Privacy</a>
+            <a href="/terms">Terms</a>
+            <a href="/contact">Contact</a>
           </div>
         </div>
       </footer>
@@ -179,14 +285,50 @@ function SignupCard({ audience }: { audience: "users" | "businesses" }) {
   );
 }
 
-function SignupInline() {
+function SignupInline({ audience }: { audience: "users" | "businesses" }) {
   return (
     <form action="/api/join" method="POST" className="inline-form">
-      <input type="hidden" name="audience" value="users" />
+      <input type="hidden" name="audience" value={audience} />
       <input type="text" name="_hp" tabIndex={-1} autoComplete="off" style={{display:'none'}} />
       <input className="input" type="email" name="email" required placeholder="Your email" />
-      <button className="button primary">Join the Waitlist</button>
+      <button className="button primary">{audience === "users" ? "Join the Waitlist" : "Join Partner List"}</button>
     </form>
+  );
+}
+
+function AudienceModal({ onSelect }: { onSelect: (audience: "users" | "businesses") => void }) {
+  const [selected, setSelected] = useState<"users" | "businesses" | null>(null);
+
+  return (
+    <div className="audience-modal" onClick={() => onSelect(selected || "users")}>
+      <div className="audience-modal-content" onClick={(e) => e.stopPropagation()}>
+        <h2>Welcome to PinHero</h2>
+        <p>Are you here as a user or a business?</p>
+        <div className="audience-options">
+          <div
+            className={`audience-option ${selected === "users" ? "selected" : ""}`}
+            onClick={() => setSelected("users")}
+          >
+            <h3>I'm a user</h3>
+            <p>I want to discover local spots, events, and deals happening around me right now.</p>
+          </div>
+          <div
+            className={`audience-option ${selected === "businesses" ? "selected" : ""}`}
+            onClick={() => setSelected("businesses")}
+          >
+            <h3>I'm a business</h3>
+            <p>I want to reach nearby customers and show up when they're actively looking.</p>
+          </div>
+        </div>
+        <button
+          className="button primary"
+          style={{ marginTop: "24px", width: "100%" }}
+          onClick={() => onSelect(selected || "users")}
+        >
+          Continue
+        </button>
+      </div>
+    </div>
   );
 }
 

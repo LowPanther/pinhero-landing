@@ -11,6 +11,7 @@ html, body { margin: 0; padding: 0; }
 .brand-name{font-weight:800;letter-spacing:-0.02em}
 .nav-links{display:none;gap:20px;align-items:center}
 .nav-links a{color:var(--text-primary);text-decoration:none}
+.nav-links a.button.primary{color:var(--button-primary-text)}
 @media (min-width: 768px){.nav-links{display:flex}}
 
 .hero{position:relative;overflow:hidden;background:var(--bg-primary)}
@@ -73,6 +74,25 @@ html, body { margin: 0; padding: 0; }
 @media (min-width: 900px){.footer-grid{grid-template-columns:1fr auto}}
 .links{display:flex;gap:16px;justify-self:end}
 .links a{color:var(--text-primary);text-decoration:none}
+
+/* Audience Selection Modal */
+.audience-modal{position:fixed;inset:0;background:rgba(0,0,0,0.6);backdrop-filter:blur(8px);display:grid;place-items:center;z-index:1000;padding:24px;animation:fade-in var(--duration-normal) var(--ease-out)}
+.audience-modal-content{background:var(--bg-card);border-radius:var(--card-radius);padding:48px 32px;max-width:560px;width:100%;text-align:center;box-shadow:var(--shadow-lg);animation:slide-up var(--duration-normal) var(--ease-out)}
+.audience-modal h2{font-size:28px;font-weight:800;color:var(--text-primary);margin-bottom:12px}
+.audience-modal p{color:var(--text-secondary);margin-bottom:32px;font-size:16px}
+.audience-options{display:grid;gap:16px}
+.audience-option{background:var(--bg-primary);border:2px solid var(--border);border-radius:var(--card-radius);padding:24px;cursor:pointer;transition:all var(--duration-normal) var(--ease-out);text-align:left}
+.audience-option:hover{border-color:var(--brand-primary);transform:translateY(-2px);box-shadow:var(--shadow-sm)}
+.audience-option.selected{border-color:var(--brand-primary);background:rgba(255,148,114,0.05)}
+.audience-option h3{font-size:20px;font-weight:700;color:var(--text-primary);margin-bottom:8px}
+.audience-option p{color:var(--text-secondary);margin:0;font-size:14px}
+.audience-switcher-nav{display:none;align-items:center;gap:8px;margin-left:auto}
+@media (min-width: 768px){.audience-switcher-nav{display:flex}}
+.audience-switcher-nav button{padding:8px 14px;border-radius:var(--radius-pill);border:1px solid var(--border);background:var(--bg-card);color:var(--text-primary);font-size:13px;font-weight:600;cursor:pointer;transition:all var(--duration-normal) var(--ease-out)}
+.audience-switcher-nav button:hover{background:rgba(255,148,114,0.1);border-color:var(--brand-primary)}
+.audience-switcher-nav button.active{background:var(--brand-primary);color:#fff;border-color:var(--brand-primary)}
+@keyframes fade-in{from{opacity:0}to{opacity:1}}
+@keyframes slide-up{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
 
 /* Body baseline (uses tokens from theme.css) */
 body {
