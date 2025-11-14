@@ -29,8 +29,7 @@ export default function LandingPage() {
             <p className="eyebrow">Launching first in Johannesburg</p>
             <h1 className="title">What’s happening around you — right now</h1>
             <p className="lead">
-              PinHero is a live, people-powered feed of pop-ups, flash deals, events, and nearby help.
-              Drop a pin and act in seconds — no planning, no endless searching.
+            PinHero helps you uncover local spots, on-the-minute events, and deals. Share your own discoveries and see what others around you recommend.
             </p>
 
             {/* Audience Switcher */}
@@ -52,17 +51,7 @@ export default function LandingPage() {
             </div>
 
             <SignupCard audience={audience} />
-            <div className="trust">No spam. Unsubscribe anytime. We’ll email when early access opens.</div>
-          </div>
-
-          <div className="device">
-            <div className="phone">
-              <div className="notch" />
-              <div className="screen">
-                <div className="screen-placeholder">App preview / GIF</div>
-              </div>
-            </div>
-            <p className="muted center">Visuals are placeholders for now</p>
+            <div className="trust">No spam. Unsubscribe anytime. We'll email when early access opens.</div>
           </div>
         </div>
       </header>
@@ -70,7 +59,7 @@ export default function LandingPage() {
       {/* Stats */}
       <section className="section">
         <div className="container stats">
-          <Stat kpi="2,000+" label="pins dropped in testing" />
+          <Stat kpi="2,000+" label="discoveries shared in testing" />
           <Stat kpi="50+" label="businesses expressed interest" />
           <Stat kpi="<10s" label="time to discover nearby" />
           <Stat kpi="1 app" label="to find, decide & act" />
@@ -85,9 +74,9 @@ export default function LandingPage() {
             Built for real life — quick decisions, local vibes, and on-the-minute moments.
           </p>
           <div className="cards">
-            <Card title="Instant discovery" desc="Drop a pin to reveal what’s worth your time within your radius." />
-            <Card title="Real-time value" desc="Catch spontaneous deals, events, and pop-ups when they’re actually happening." />
-            <Card title="Get help fast" desc="From towing to music lessons — request services right where you are." />
+            <Card title="Instant discovery" desc="Open the app and your feed updates automatically with what's happening around you right now." />
+            <Card title="Real-time value" desc="Catch spontaneous deals, events, and pop-ups when they're actually happening." />
+            <Card title="Discover with friends" desc="Connect with friends and see what they're discovering nearby — make plans together in real-time." />
           </div>
         </div>
       </section>
@@ -97,8 +86,8 @@ export default function LandingPage() {
         <div className="container">
           <h2 className="h2">How it works</h2>
           <div className="steps">
-            <Step n={1} title="Drop a pin" desc="Mark your current spot or any place you care about." />
-            <Step n={2} title="See what’s nearby" desc="Restaurants, events, services, deals — all in one feed." />
+            <Step n={1} title="Open the app" desc="Your location is automatically detected and your feed updates with nearby happenings." />
+            <Step n={2} title="Browse your feed" desc="Restaurants, events, deals, and more — all curated by proximity and time." />
             <Step n={3} title="Act in seconds" desc="Call, navigate, book, or redeem — straight from PinHero." />
           </div>
         </div>
