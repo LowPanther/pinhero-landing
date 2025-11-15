@@ -170,6 +170,24 @@ export default function LandingPage() {
             <h1 className="title">{currentContent.hero.title}</h1>
             <p className="lead">{currentContent.hero.lead}</p>
 
+            {/* Mobile audience switcher - visible on mobile, hidden on desktop */}
+            <div className="audience-switcher-mobile">
+              <button
+                className={`pill ${audience === "users" ? "active" : ""}`}
+                onClick={() => handleAudienceChange("users")}
+                type="button"
+              >
+                I'm a user
+              </button>
+              <button
+                className={`pill ${audience === "businesses" ? "active" : ""}`}
+                onClick={() => handleAudienceChange("businesses")}
+                type="button"
+              >
+                I'm a business
+              </button>
+            </div>
+
             <SignupCard audience={audience} />
             <div className="trust">No spam. Unsubscribe anytime. We'll email when early access opens.</div>
           </div>

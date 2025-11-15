@@ -26,7 +26,7 @@ html, body { margin: 0; padding: 0; }
 @media (max-width: 767px){
   .nav-links.mobile-open{display:flex;flex-direction:column;position:fixed;top:0;right:0;bottom:0;left:0;background:var(--bg-card);padding:80px 24px 24px;z-index:99;overflow-y:auto;gap:24px;align-items:stretch}
   .nav-links.mobile-open a{font-size:18px;padding:12px 0;border-bottom:1px solid var(--border)}
-  .nav-links.mobile-open .audience-switcher-nav{flex-direction:column;width:100%}
+  .nav-links.mobile-open .audience-switcher-nav{display:flex;flex-direction:column;width:100%;margin-left:0}
   .nav-links.mobile-open .audience-switcher-nav button{width:100%;padding:14px}
   .nav-links.mobile-open .button.primary{width:100%;text-align:center;padding:14px 18px}
 }
@@ -46,7 +46,9 @@ html, body { margin: 0; padding: 0; }
 @media (min-width: 768px){.lead{font-size:18px}}
 
 .switcher{display:inline-flex;gap:6px;background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius-pill);padding:6px;margin-top:16px;box-shadow:var(--shadow-sm)}
-.pill{border-radius:var(--radius-pill);padding:10px 14px;border:none;background:transparent;color:var(--text-primary);font-weight:600;cursor:pointer;transition:all var(--duration-normal) var(--ease-out)}
+.audience-switcher-mobile{display:flex;gap:8px;margin-top:24px;justify-content:center}
+@media (min-width: 768px){.audience-switcher-mobile{display:none}}
+.pill{border-radius:var(--radius-pill);padding:10px 14px;border:none;background:transparent;color:var(--text-primary);font-weight:600;cursor:pointer;transition:all var(--duration-normal) var(--ease-out);font-size:14px}
 .pill:hover{background:rgba(255,148,114,0.1)}
 .pill.active{background:var(--brand-primary);color:#fff}
 
@@ -99,8 +101,9 @@ html, body { margin: 0; padding: 0; }
 .links a{color:var(--text-primary);text-decoration:none}
 
 /* Audience Selection Modal */
-.audience-modal{position:fixed;inset:0;background:rgba(0,0,0,0.6);backdrop-filter:blur(8px);display:grid;place-items:center;z-index:1000;padding:24px;animation:fade-in var(--duration-normal) var(--ease-out)}
+.audience-modal{position:fixed;inset:0;background:rgba(0,0,0,0.6);backdrop-filter:blur(8px);display:grid;place-items:center;z-index:1001;padding:24px;animation:fade-in var(--duration-normal) var(--ease-out)}
 .audience-modal-content{background:var(--bg-card);border-radius:var(--card-radius);padding:48px 32px;max-width:560px;width:100%;text-align:center;box-shadow:var(--shadow-lg);animation:slide-up var(--duration-normal) var(--ease-out)}
+@media (max-width: 767px){.audience-modal-content{padding:32px 24px;max-width:calc(100% - 48px)}}
 .audience-modal h2{font-size:28px;font-weight:800;color:var(--text-primary);margin-bottom:12px}
 .audience-modal p{color:var(--text-secondary);margin-bottom:32px;font-size:16px}
 .audience-options{display:grid;gap:16px}
