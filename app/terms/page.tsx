@@ -7,8 +7,8 @@ export default function TermsPage() {
     <div className="legal-page">
       <nav className="container topbar">
         <Link href="/" className="brand">
-          <div className="brand-mark">P</div>
-          <span className="brand-name">PinHero</span>
+          <div className="brand-mark">H</div>
+          <span className="brand-name">Hopskip</span>
         </Link>
         <div className="nav-links">
           <Link href="/#how">How it works</Link>
@@ -26,14 +26,14 @@ export default function TermsPage() {
           <section>
             <h2>1. Acceptance of Terms</h2>
             <p>
-              By accessing and using the PinHero website and joining our waitlist, you accept and agree to be bound by the terms and provision of this agreement. If you do not agree to these terms, please do not use our service.
+              By accessing and using the Hopskip website and joining our waitlist, you accept and agree to be bound by the terms and provision of this agreement. If you do not agree to these terms, please do not use our service.
             </p>
           </section>
 
           <section>
             <h2>2. Description of Service</h2>
             <p>
-              PinHero is a local discovery platform currently in development. This website serves as a landing page to collect interest and build a waitlist for early access to the PinHero application when it launches.
+              Hopskip is a local discovery platform currently in development. This website serves as a landing page to collect interest and build a waitlist for early access to the Hopskip application when it launches.
             </p>
           </section>
 
@@ -51,7 +51,7 @@ export default function TermsPage() {
           <section>
             <h2>4. No Guarantee of Access</h2>
             <p>
-              Joining the waitlist does not guarantee access to PinHero when it launches. Early access will be granted at our sole discretion, and we reserve the right to prioritize certain users or locations. We are under no obligation to provide access to all waitlist members.
+              Joining the waitlist does not guarantee access to Hopskip when it launches. Early access will be granted at our sole discretion, and we reserve the right to prioritize certain users or locations. We are under no obligation to provide access to all waitlist members.
             </p>
           </section>
 
@@ -70,7 +70,7 @@ export default function TermsPage() {
           <section>
             <h2>6. Intellectual Property</h2>
             <p>
-              All content on this website, including but not limited to text, graphics, logos, and software, is the property of PinHero or its content suppliers and is protected by copyright, trademark, and other intellectual property laws. You may not reproduce, distribute, or create derivative works from any content without our express written permission.
+              All content on this website, including but not limited to text, graphics, logos, and software, is the property of Hopskip or its content suppliers and is protected by copyright, trademark, and other intellectual property laws. You may not reproduce, distribute, or create derivative works from any content without our express written permission.
             </p>
           </section>
 
@@ -84,14 +84,14 @@ export default function TermsPage() {
           <section>
             <h2>8. Limitation of Liability</h2>
             <p>
-              To the fullest extent permitted by law, PinHero shall not be liable for any indirect, incidental, special, consequential, or punitive damages, or any loss of profits or revenues, whether incurred directly or indirectly, or any loss of data, use, goodwill, or other intangible losses resulting from your use of this website.
+              To the fullest extent permitted by law, Hopskip shall not be liable for any indirect, incidental, special, consequential, or punitive damages, or any loss of profits or revenues, whether incurred directly or indirectly, or any loss of data, use, goodwill, or other intangible losses resulting from your use of this website.
             </p>
           </section>
 
           <section>
             <h2>9. Indemnification</h2>
             <p>
-              You agree to indemnify, defend, and hold harmless PinHero and its officers, directors, employees, and agents from any claims, damages, losses, liabilities, and expenses (including legal fees) arising out of or relating to your use of the website or violation of these Terms.
+              You agree to indemnify, defend, and hold harmless Hopskip and its officers, directors, employees, and agents from any claims, damages, losses, liabilities, and expenses (including legal fees) arising out of or relating to your use of the website or violation of these Terms.
             </p>
           </section>
 
@@ -129,7 +129,7 @@ export default function TermsPage() {
               If you have any questions about these Terms of Service, please contact us:
             </p>
             <p>
-              <strong>PinHero</strong><br />
+              <strong>Hopskip</strong><br />
               <a href="tel:+27784944688">+27 78 494 4688</a> | <a href="https://wa.me/27784944688" target="_blank" rel="noopener noreferrer">WhatsApp</a>
             </p>
           </section>
@@ -140,10 +140,10 @@ export default function TermsPage() {
         <div className="container footer-grid">
           <div>
             <div className="brand">
-              <div className="brand-mark">P</div>
-              <span className="brand-name">PinHero</span>
+              <div className="brand-mark">H</div>
+              <span className="brand-name">Hopskip</span>
             </div>
-            <p className="tiny muted">Local discovery, on-the-minute. © {new Date().getFullYear()} PinHero.</p>
+            <p className="tiny muted">Local discovery, on-the-minute. © {new Date().getFullYear()} Hopskip.</p>
           </div>
           <div className="links">
             <Link href="/privacy">Privacy</Link>

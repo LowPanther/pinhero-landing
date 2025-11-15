@@ -8,7 +8,7 @@ const content = {
     hero: {
       eyebrow: "Launching first in Johannesburg",
       title: "What's happening around you — right now",
-      lead: "PinHero helps you uncover local spots, on-the-minute events, and deals. Share your own discoveries and see what others around you recommend."
+      lead: "Hopskip helps you uncover local spots, on-the-minute events, and deals. Share your own discoveries and see what others around you recommend."
     },
     stats: [
       { kpi: "2,000+", label: "discoveries shared in testing" },
@@ -17,7 +17,7 @@ const content = {
       { kpi: "1 app", label: "to find, decide & act" }
     ],
     benefits: {
-      title: "Why you'll love PinHero",
+      title: "Why you'll love Hopskip",
       subtitle: "Built for real life — quick decisions, local vibes, and on-the-minute moments.",
       cards: [
         { title: "Instant discovery", desc: "Open the app and your feed updates automatically with what's happening around you right now." },
@@ -30,7 +30,7 @@ const content = {
       steps: [
         { title: "Open the app", desc: "Your location is automatically detected and your feed updates with nearby happenings." },
         { title: "Browse your feed", desc: "Restaurants, events, deals, and more — all curated by proximity and time." },
-        { title: "Act in seconds", desc: "Call, navigate, book, or redeem — straight from PinHero." }
+        { title: "Act in seconds", desc: "Call, navigate, book, or redeem — straight from Hopskip." }
       ]
     },
     cta: {
@@ -39,7 +39,7 @@ const content = {
       note: "We'll prioritise early signups in Johannesburg."
     },
     faqs: [
-      { q: "Is the app free for users?", a: "Yes. PinHero will be free for consumers at launch." },
+      { q: "Is the app free for users?", a: "Yes. Hopskip will be free for consumers at launch." },
       { q: "When are you launching?", a: "We're rolling out city by city. Johannesburg first, with other metros to follow." },
       { q: "Can businesses sign up too?", a: "Absolutely. Use the Business toggle above to register your interest and get partner updates." }
     ]
@@ -48,7 +48,7 @@ const content = {
     hero: {
       eyebrow: "Launching first in Johannesburg",
       title: "Reach nearby customers — on the minute",
-      lead: "PinHero helps businesses connect with customers who are actively looking right now. Show up when it matters most — when they're nearby and ready to act."
+      lead: "Hopskip helps businesses connect with customers who are actively looking right now. Show up when it matters most — when they're nearby and ready to act."
     },
     stats: [
       { kpi: "50+", label: "businesses already interested" },
@@ -57,7 +57,7 @@ const content = {
       { kpi: "On-demand", label: "local reach" }
     ],
     benefits: {
-      title: "Why businesses love PinHero",
+      title: "Why businesses love Hopskip",
       subtitle: "Built for real-time customer connection — reach people when they're nearby and ready to engage.",
       cards: [
         { title: "Instant visibility", desc: "Show up in nearby customers' feeds automatically when they open the app — no ads needed." },
@@ -68,20 +68,20 @@ const content = {
     howItWorks: {
       title: "How it works",
       steps: [
-        { title: "List your business", desc: "Add your business to PinHero and set your location, hours, and offerings." },
+        { title: "List your business", desc: "Add your business to Hopskip and set your location, hours, and offerings." },
         { title: "Customers discover you", desc: "When customers open the app nearby, your business appears in their feed automatically." },
         { title: "They act immediately", desc: "Customers can call, navigate, book, or redeem offers — straight from the app." }
       ]
     },
     cta: {
       title: "Join the partner program",
-      subtitle: "Get early access to PinHero's business platform and start reaching nearby customers.",
+      subtitle: "Get early access to Hopskip's business platform and start reaching nearby customers.",
       note: "We'll prioritise early signups in Johannesburg."
     },
     faqs: [
       { q: "How much does it cost?", a: "Pricing details will be shared with early partners. Contact us to learn more." },
       { q: "When can I start using it?", a: "We're rolling out city by city. Johannesburg first, with other metros to follow." },
-      { q: "What types of businesses can join?", a: "Any local business — restaurants, shops, services, events, and more. If you serve customers nearby, PinHero can help." }
+      { q: "What types of businesses can join?", a: "Any local business — restaurants, shops, services, events, and more. If you serve customers nearby, Hopskip can help." }
     ]
   }
 };
@@ -93,7 +93,7 @@ export default function LandingPage() {
 
   // Check localStorage on mount and show modal if no choice exists
   useEffect(() => {
-    const savedAudience = localStorage.getItem("pinhero-audience") as "users" | "businesses" | null;
+    const savedAudience = localStorage.getItem("hopskip-audience") as "users" | "businesses" | null;
     if (savedAudience) {
       setAudience(savedAudience);
     } else {
@@ -103,13 +103,13 @@ export default function LandingPage() {
 
   const handleAudienceSelect = (selected: "users" | "businesses") => {
     setAudience(selected);
-    localStorage.setItem("pinhero-audience", selected);
+    localStorage.setItem("hopskip-audience", selected);
     setShowModal(false);
   };
 
   const handleAudienceChange = (newAudience: "users" | "businesses") => {
     setAudience(newAudience);
-    localStorage.setItem("pinhero-audience", newAudience);
+    localStorage.setItem("hopskip-audience", newAudience);
   };
 
   const currentContent = content[audience];
@@ -124,8 +124,8 @@ export default function LandingPage() {
       {/* Top Bar */}
       <nav className="container topbar">
         <div className="brand">
-          <div className="brand-mark">P</div>
-          <span className="brand-name">PinHero</span>
+          <div className="brand-mark">H</div>
+          <span className="brand-name">Hopskip</span>
         </div>
         <button 
           className="mobile-menu-toggle"
@@ -255,10 +255,10 @@ export default function LandingPage() {
         <div className="container footer-grid">
           <div>
             <div className="brand">
-              <div className="brand-mark">P</div>
-              <span className="brand-name">PinHero</span>
+              <div className="brand-mark">H</div>
+              <span className="brand-name">Hopskip</span>
             </div>
-            <p className="tiny muted">Local discovery, on-the-minute. © {new Date().getFullYear()} PinHero.</p>
+            <p className="tiny muted">Local discovery, on-the-minute. © {new Date().getFullYear()} Hopskip.</p>
           </div>
           <div className="links">
             <a href="/privacy">Privacy</a>
@@ -278,7 +278,7 @@ function SignupCard({ audience }: { audience: "users" | "businesses" }) {
     return (
       <div className="card">
         <h3 className="h4">Join the user waitlist</h3>
-        <p className="tiny muted">Get early access and perks when PinHero goes live.</p>
+        <p className="tiny muted">Get early access and perks when Hopskip goes live.</p>
 
         {/* USERS FORM (posts to your /api/join) */}
         <form action="/api/join" method="POST" className="form">
@@ -286,8 +286,8 @@ function SignupCard({ audience }: { audience: "users" | "businesses" }) {
           <input type="text" name="_hp" tabIndex={-1} autoComplete="off" style={{display:'none'}} />
           <input className="input" placeholder="Email address" type="email" name="email" required />
           <input className="input" placeholder="City (e.g., Johannesburg)" name="city" />
-          <textarea className="input" placeholder="What would you love to discover with PinHero? (Optional)" name="discover" rows={2} />
-          <textarea className="input" placeholder="What would make PinHero most valuable for you? (Optional)" name="value" rows={2} />
+          <textarea className="input" placeholder="What would you love to discover with Hopskip? (Optional)" name="discover" rows={2} />
+          <textarea className="input" placeholder="What would make Hopskip most valuable for you? (Optional)" name="value" rows={2} />
           <button type="submit" className="button primary">Join</button>
         </form>
       </div>
@@ -306,7 +306,7 @@ function SignupCard({ audience }: { audience: "users" | "businesses" }) {
         <input className="input" placeholder="Work email" type="email" name="email" required />
         <input className="input" placeholder="Business name" name="businessName" />
         <input className="input" placeholder="City (e.g., Johannesburg)" name="city" />
-        <textarea className="input" placeholder="What would you hope PinHero brings to your business? (Optional)" name="hope" rows={2} />
+        <textarea className="input" placeholder="What would you hope Hopskip brings to your business? (Optional)" name="hope" rows={2} />
         <textarea className="input" placeholder="What’s your biggest challenge in attracting nearby customers? (Optional)" name="challenge" rows={2} />
         <button type="submit" className="button primary">Join Partner List</button>
       </form>
@@ -331,7 +331,7 @@ function AudienceModal({ onSelect }: { onSelect: (audience: "users" | "businesse
   return (
     <div className="audience-modal" onClick={() => onSelect(selected || "users")}>
       <div className="audience-modal-content" onClick={(e) => e.stopPropagation()}>
-        <h2>Welcome to PinHero</h2>
+        <h2>Welcome to Hopskip</h2>
         <p>Are you here as a user or a business?</p>
         <div className="audience-options">
           <div

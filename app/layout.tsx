@@ -14,9 +14,9 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "PinHero — What’s happening around you, right now",
+  title: "Hopskip — What’s happening around you, right now",
   description:
-    "PinHero is the real-time, people-powered feed of your city — flash deals, pop-ups, micro-events, and nearby help. Drop a pin and act in seconds.",
+    "Hopskip is the real-time, people-powered feed of your city — flash deals, pop-ups, and micro-events. Discover and act in seconds.",
 };
 
 export default function RootLayout({

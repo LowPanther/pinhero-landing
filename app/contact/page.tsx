@@ -7,8 +7,8 @@ export default function ContactPage() {
     <div className="legal-page">
       <nav className="container topbar">
         <Link href="/" className="brand">
-          <div className="brand-mark">P</div>
-          <span className="brand-name">PinHero</span>
+          <div className="brand-mark">H</div>
+          <span className="brand-name">Hopskip</span>
         </Link>
         <div className="nav-links">
           <Link href="/#how">How it works</Link>
@@ -22,7 +22,7 @@ export default function ContactPage() {
         <div className="container">
           <h1>Contact Us</h1>
           <p className="lead">
-            Have questions about PinHero? Want to learn more about our waitlist or partner program? We'd love to hear from you.
+            Have questions about Hopskip? Want to learn more about our waitlist or partner program? We'd love to hear from you.
           </p>
 
           <section className="contact-info">
@@ -54,7 +54,7 @@ export default function ContactPage() {
             <h2>Frequently Asked Questions</h2>
             <div className="faq-section">
               <div className="faq-item">
-                <h3>When will PinHero launch?</h3>
+                <h3>When will Hopskip launch?</h3>
                 <p>We're rolling out city by city, starting with Johannesburg. Join the waitlist to be notified when we launch in your area.</p>
               </div>
               <div className="faq-item">
@@ -74,10 +74,10 @@ export default function ContactPage() {
         <div className="container footer-grid">
           <div>
             <div className="brand">
-              <div className="brand-mark">P</div>
-              <span className="brand-name">PinHero</span>
+              <div className="brand-mark">H</div>
+              <span className="brand-name">Hopskip</span>
             </div>
-            <p className="tiny muted">Local discovery, on-the-minute. © {new Date().getFullYear()} PinHero.</p>
+            <p className="tiny muted">Local discovery, on-the-minute. © {new Date().getFullYear()} Hopskip.</p>
           </div>
           <div className="links">
             <Link href="/privacy">Privacy</Link>

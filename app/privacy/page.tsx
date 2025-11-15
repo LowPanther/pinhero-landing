@@ -7,8 +7,8 @@ export default function PrivacyPage() {
     <div className="legal-page">
       <nav className="container topbar">
         <Link href="/" className="brand">
-          <div className="brand-mark">P</div>
-          <span className="brand-name">PinHero</span>
+          <div className="brand-mark">H</div>
+          <span className="brand-name">Hopskip</span>
         </Link>
         <div className="nav-links">
           <Link href="/#how">How it works</Link>
@@ -26,7 +26,7 @@ export default function PrivacyPage() {
           <section>
             <h2>1. Introduction</h2>
             <p>
-              PinHero ("we," "our," or "us") is committed to protecting your privacy. This Privacy Policy explains how we collect, use, disclose, and safeguard your information when you visit our website and join our waitlist.
+              Hopskip ("we," "our," or "us") is committed to protecting your privacy. This Privacy Policy explains how we collect, use, disclose, and safeguard your information when you visit our website and join our waitlist.
             </p>
           </section>
 
@@ -34,7 +34,7 @@ export default function PrivacyPage() {
             <h2>2. Information We Collect</h2>
             <p>When you join our waitlist, we may collect the following information:</p>
             <ul>
-              <li><strong>Email address</strong> - Required to notify you when PinHero launches in your area</li>
+              <li><strong>Email address</strong> - Required to notify you when Hopskip launches in your area</li>
               <li><strong>City</strong> - Optional information to help us prioritize launch locations</li>
               <li><strong>Additional feedback</strong> - Optional responses to questions about your interests and needs</li>
               <li><strong>Technical information</strong> - Automatically collected data including IP address, browser type, and device information for security and analytics purposes</li>
@@ -45,7 +45,7 @@ export default function PrivacyPage() {
             <h2>3. How We Use Your Information</h2>
             <p>We use the information we collect to:</p>
             <ul>
-              <li>Notify you when PinHero launches in your city</li>
+              <li>Notify you when Hopskip launches in your city</li>
               <li>Prioritize launch locations based on interest</li>
               <li>Improve our service based on your feedback</li>
               <li>Prevent fraud and ensure security</li>
@@ -109,7 +109,7 @@ export default function PrivacyPage() {
               If you have any questions about this Privacy Policy or wish to exercise your rights, please contact us:
             </p>
             <p>
-              <strong>PinHero</strong><br />
+              <strong>Hopskip</strong><br />
               <a href="tel:+27784944688">+27 78 494 4688</a> | <a href="https://wa.me/27784944688" target="_blank" rel="noopener noreferrer">WhatsApp</a>
             </p>
           </section>
@@ -120,10 +120,10 @@ export default function PrivacyPage() {
         <div className="container footer-grid">
           <div>
             <div className="brand">
-              <div className="brand-mark">P</div>
-              <span className="brand-name">PinHero</span>
+              <div className="brand-mark">H</div>
+              <span className="brand-name">Hopskip</span>
             </div>
-            <p className="tiny muted">Local discovery, on-the-minute. © {new Date().getFullYear()} PinHero.</p>
+            <p className="tiny muted">Local discovery, on-the-minute. © {new Date().getFullYear()} Hopskip.</p>
           </div>
           <div className="links">
             <Link href="/privacy">Privacy</Link>
