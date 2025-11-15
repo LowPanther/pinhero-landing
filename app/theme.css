@@ -47,9 +47,10 @@
 
   /* Gradient */
   --gradient-hero: linear-gradient(
-    135deg,
-    var(--brand-primary) 0%,
-    var(--brand-warning) 58%,
+    to bottom,
+    var(--bg-primary) 0%,
+    var(--brand-primary) 30%,
+    var(--brand-warning) 70%,
     var(--bg-primary) 100%
   );
 

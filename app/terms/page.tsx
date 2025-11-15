@@ -7,7 +7,7 @@ export default function TermsPage() {
     <div className="legal-page">
       <nav className="container topbar">
         <Link href="/" className="brand">
-          <div className="brand-mark">H</div>
+          <img src="/hopskip-logo.png" alt="Hopskip" className="brand-logo" />
           <span className="brand-name">Hopskip</span>
         </Link>
         <div className="nav-links">
@@ -138,11 +138,8 @@ export default function TermsPage() {
 
       <footer className="footer">
         <div className="container footer-grid">
-          <div>
-            <div className="brand">
-              <div className="brand-mark">H</div>
-              <span className="brand-name">Hopskip</span>
-            </div>
+          <div className="footer-brand">
+            <img src="/hopskip-logo.png" alt="Hopskip" className="brand-logo" />
             <p className="tiny muted">Local discovery, on-the-minute. © {new Date().getFullYear()} Hopskip.</p>
           </div>
           <div className="links">
