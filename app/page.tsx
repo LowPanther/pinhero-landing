@@ -89,6 +89,7 @@ const content = {
 export default function LandingPage() {
   const [audience, setAudience] = useState<"users" | "businesses">("users");
   const [showModal, setShowModal] = useState(false);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   // Check localStorage on mount and show modal if no choice exists
   useEffect(() => {
@@ -126,10 +127,20 @@ export default function LandingPage() {
           <div className="brand-mark">P</div>
           <span className="brand-name">PinHero</span>
         </div>
-        <div className="nav-links">
-          <a href="#how">How it works</a>
-          <a href="#benefits">Benefits</a>
-          <a href="#faq">FAQ</a>
+        <button 
+          className="mobile-menu-toggle"
+          onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+          type="button"
+          aria-label="Toggle menu"
+        >
+          <span className={mobileMenuOpen ? "open" : ""}></span>
+          <span className={mobileMenuOpen ? "open" : ""}></span>
+          <span className={mobileMenuOpen ? "open" : ""}></span>
+        </button>
+        <div className={`nav-links ${mobileMenuOpen ? "mobile-open" : ""}`}>
+          <a href="#how" onClick={() => setMobileMenuOpen(false)}>How it works</a>
+          <a href="#benefits" onClick={() => setMobileMenuOpen(false)}>Benefits</a>
+          <a href="#faq" onClick={() => setMobileMenuOpen(false)}>FAQ</a>
           <div className="audience-switcher-nav">
             <button
               className={audience === "users" ? "active" : ""}
@@ -146,7 +157,7 @@ export default function LandingPage() {
               For Businesses
             </button>
           </div>
-          <a href="#join" className="button primary sm">Join Waitlist</a>
+          <a href="#join" className="button primary sm" onClick={() => setMobileMenuOpen(false)}>Join Waitlist</a>
         </div>
       </nav>
 
