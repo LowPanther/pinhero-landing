@@ -3,6 +3,8 @@ import { NextResponse } from "next/server";
 import admin from "firebase-admin";
 import { Resend } from "resend";
 
+let firebaseProjectId: string | undefined = undefined;
+
 function getFirestore() {
   if (!admin.apps.length) {
     const json = process.env.FIREBASE_SERVICE_ACCOUNT_JSON;
@@ -19,18 +21,27 @@ function getFirestore() {
         jsonString = jsonString.replace(/\\"/g, '"').replace(/\\'/g, "'");
         
         const creds = JSON.parse(jsonString);
-        console.log(`✅ Parsed Firebase credentials for project: ${creds.project_id}`);
+        firebaseProjectId = creds.project_id;
+        console.log(`✅ Parsed Firebase credentials for project: ${firebaseProjectId}`);
+        
+        if (!firebaseProjectId || !creds.client_email || !creds.private_key) {
+          throw new Error("Missing required fields in Firebase credentials (project_id, client_email, or private_key)");
+        }
+        
         admin.initializeApp({
           credential: admin.credential.cert({
-            projectId: creds.project_id,
+            projectId: firebaseProjectId,
             clientEmail: creds.client_email,
             privateKey: (creds.private_key || "").replace(/\\n/g, "\n"),
           }),
         });
+        console.log(`✅ Firebase Admin initialized for project: ${firebaseProjectId}`);
       } catch (parseError) {
         console.error(`❌ Failed to parse FIREBASE_SERVICE_ACCOUNT_JSON`);
         console.error(`❌ Error:`, (parseError as Error).message);
-        console.error(`❌ First 50 chars of value:`, json?.substring(0, 50));
+        console.error(`❌ First 100 chars of value:`, json?.substring(0, 100));
+        console.error(`❌ Environment variable exists:`, !!json);
+        console.error(`❌ Environment variable length:`, json?.length);
         throw new Error(
           `Invalid FIREBASE_SERVICE_ACCOUNT_JSON format. Error: ${(parseError as Error).message}. ` +
           `Make sure the environment variable contains valid JSON, not just the variable name.`
@@ -41,14 +52,27 @@ function getFirestore() {
       const clientEmail = process.env.FIREBASE_CLIENT_EMAIL;
       const privateKey = (process.env.FIREBASE_PRIVATE_KEY || "").replace(/\\n/g, "\n");
       if (!projectId || !clientEmail || !privateKey) {
+        console.error(`❌ Missing Firebase credentials. FIREBASE_SERVICE_ACCOUNT_JSON: ${!!json}`);
+        console.error(`❌ FIREBASE_PROJECT_ID: ${!!projectId}`);
+        console.error(`❌ FIREBASE_CLIENT_EMAIL: ${!!clientEmail}`);
+        console.error(`❌ FIREBASE_PRIVATE_KEY: ${!!privateKey}`);
         throw new Error(
           "Missing Firebase credentials. Set FIREBASE_SERVICE_ACCOUNT_JSON or the trio of FIREBASE_PROJECT_ID, FIREBASE_CLIENT_EMAIL, FIREBASE_PRIVATE_KEY."
         );
       }
-      console.log(`✅ Using separate Firebase credentials for project: ${projectId}`);
+      firebaseProjectId = projectId;
+      console.log(`✅ Using separate Firebase credentials for project: ${firebaseProjectId}`);
       admin.initializeApp({
         credential: admin.credential.cert({ projectId, clientEmail, privateKey }),
       });
+    }
+  } else {
+    // App already initialized, try to get project ID
+    try {
+      const app = admin.app();
+      firebaseProjectId = app.options.projectId;
+    } catch (e) {
+      // Ignore
     }
   }
   return admin.firestore();
@@ -113,9 +137,20 @@ export async function GET() {
     log("✅ Firestore instance created");
     
     // Verify which project we're connected to
-    const app = admin.app();
-    const projectId = app.options.projectId;
-    log(`🏗️ Connected to Firebase project: ${projectId}`);
+    let projectId = firebaseProjectId;
+    try {
+      const app = admin.app();
+      projectId = app.options.projectId || firebaseProjectId;
+    } catch (e) {
+      // Use stored project ID
+    }
+    log(`🏗️ Connected to Firebase project: ${projectId || 'UNDEFINED - CREDENTIALS NOT LOADED'}`);
+    
+    if (!projectId) {
+      log(`❌ CRITICAL: Firebase project ID is undefined!`);
+      log(`❌ This means Firebase credentials are not being loaded correctly.`);
+      log(`❌ Check Vercel environment variables.`);
+    }
     
     const now = admin.firestore.Timestamp.now();
     log(`⏰ Server time: ${now.toDate().toISOString()}`);
@@ -198,11 +233,22 @@ export async function POST(req: Request) {
     const db = getFirestore();
     
     // Verify which project we're connected to
-    const app = admin.app();
-    const projectId = app.options.projectId;
+    let projectId = firebaseProjectId;
+    try {
+      const app = admin.app();
+      projectId = app.options.projectId || firebaseProjectId;
+    } catch (e) {
+      // Use stored project ID
+    }
     console.log(`✅ Firestore initialized`);
-    console.log(`🏗️  Connected to Firebase project: ${projectId}`);
+    console.log(`🏗️  Connected to Firebase project: ${projectId || 'UNDEFINED - CREDENTIALS NOT LOADED'}`);
     console.log(`📊 Database: Firestore`);
+    
+    if (!projectId) {
+      console.error(`❌ CRITICAL: Firebase project ID is undefined!`);
+      console.error(`❌ This means Firebase credentials are not being loaded correctly.`);
+      console.error(`❌ Check Vercel environment variables.`);
+    }
     const now = admin.firestore.Timestamp.now();
 
     // Choose collection by audience
