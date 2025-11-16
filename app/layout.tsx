@@ -14,9 +14,14 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Hopskip — What’s happening around you, right now",
+  title: "Hopskip — What's happening around you, right now",
   description:
     "Hopskip is the real-time, people-powered feed of your city — flash deals, pop-ups, and micro-events. Discover and act in seconds.",
+  icons: {
+    icon: "/favicon.png",
+    shortcut: "/favicon.png",
+    apple: "/favicon.png",
+  },
 };
 
 export default function RootLayout({

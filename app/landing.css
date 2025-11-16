@@ -65,6 +65,7 @@ html, body { margin: 0; padding: 0; }
 .button.primary{background:var(--button-primary-bg);color:var(--button-primary-text);box-shadow:var(--shadow-button)}
 .button.primary:hover{transform:translateY(-1px);box-shadow:0 12px 32px rgba(255,148,114,0.45)}
 .button.primary:active{transform:translateY(0)}
+#join .button.primary{margin:24px 0}
 .button.sm{padding:10px 14px}
 .trust{margin-top:16px;font-size:12px;color:var(--text-tertiary);line-height:1.5}
 @media (min-width: 768px){.trust{margin-top:10px}}

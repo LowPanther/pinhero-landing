@@ -11,9 +11,9 @@ const content = {
       lead: "Hopskip helps you uncover local spots, on-the-minute events, and deals. Share your own discoveries and see what others around you recommend."
     },
     stats: [
-      { kpi: "2,000+", label: "discoveries shared in testing" },
-      { kpi: "50+", label: "businesses on the platform" },
-      { kpi: "<10s", label: "time to discover nearby" },
+      { kpi: "Real-time", label: "local discovery" },
+      { kpi: "On-the-minute", label: "updates & deals" },
+      { kpi: "Free", label: "forever for users" },
       { kpi: "1 app", label: "to find, decide & act" }
     ],
     benefits: {
@@ -51,10 +51,10 @@ const content = {
       lead: "Hopskip helps businesses connect with customers who are actively looking right now. Show up when it matters most — when they're nearby and ready to act."
     },
     stats: [
-      { kpi: "50+", label: "businesses already interested" },
-      { kpi: "2,000+", label: "active users in testing" },
       { kpi: "Real-time", label: "customer discovery" },
-      { kpi: "On-demand", label: "local reach" }
+      { kpi: "On-demand", label: "local reach" },
+      { kpi: "Launching", label: "in Johannesburg" },
+      { kpi: "Early access", label: "for partners" }
     ],
     benefits: {
       title: "Why businesses love Hopskip",
@@ -233,7 +233,21 @@ export default function LandingPage() {
         <div className="container center">
           <h3 className="h3">{currentContent.cta.title}</h3>
           <p className="muted">{currentContent.cta.subtitle}</p>
-          <SignupInline audience={audience} />
+          <button 
+            className="button primary"
+            onClick={() => {
+              window.scrollTo({ top: 0, behavior: 'smooth' });
+              setTimeout(() => {
+                const emailInput = document.querySelector('input[name="email"]') as HTMLInputElement;
+                if (emailInput) {
+                  emailInput.focus();
+                }
+              }, 500);
+            }}
+            type="button"
+          >
+            {audience === "users" ? "Join the Waitlist" : "Join Partner List"}
+          </button>
           <p className="tiny muted">{currentContent.cta.note}</p>
         </div>
       </section>
@@ -311,16 +325,6 @@ function SignupCard({ audience }: { audience: "users" | "businesses" }) {
   );
 }
 
-function SignupInline({ audience }: { audience: "users" | "businesses" }) {
-  return (
-    <form action="/api/join" method="POST" className="inline-form">
-      <input type="hidden" name="audience" value={audience} />
-      <input type="text" name="_hp" tabIndex={-1} autoComplete="off" style={{display:'none'}} />
-      <input className="input" type="email" name="email" required placeholder="Your email" />
-      <button className="button primary">{audience === "users" ? "Join the Waitlist" : "Join Partner List"}</button>
-    </form>
-  );
-}
 
 function AudienceModal({ onSelect }: { onSelect: (audience: "users" | "businesses") => void }) {
   const [selected, setSelected] = useState<"users" | "businesses" | null>(null);
