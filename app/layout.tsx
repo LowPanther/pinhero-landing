@@ -18,9 +18,12 @@ export const metadata: Metadata = {
   description:
     "Hopskip is the real-time, people-powered feed of your city — flash deals, pop-ups, and micro-events. Discover and act in seconds.",
   icons: {
-    icon: "/favicon.png",
-    shortcut: "/favicon.png",
-    apple: "/favicon.png",
+    icon: [
+      { url: "/favicon.png?v=2", type: "image/png" },
+    ],
+    apple: [
+      { url: "/favicon.png?v=2", type: "image/png" },
+    ],
   },
 };
 

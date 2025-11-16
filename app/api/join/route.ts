@@ -1,54 +1,137 @@
 // app/api/join/route.ts
 import { NextResponse } from "next/server";
 import admin from "firebase-admin";
+import { Resend } from "resend";
 
 function getFirestore() {
   if (!admin.apps.length) {
-    // Try single JSON var first
     const json = process.env.FIREBASE_SERVICE_ACCOUNT_JSON;
     if (json) {
-      const creds = JSON.parse(json);
-      admin.initializeApp({
-        credential: admin.credential.cert({
-          projectId: creds.project_id,
-          clientEmail: creds.client_email,
-          privateKey: (creds.private_key || "").replace(/\\n/g, "\n"),
-        }),
-      });
+      try {
+        // Handle case where the JSON might be wrapped in quotes or have extra whitespace
+        let jsonString = json.trim();
+        // Remove surrounding quotes if present
+        if ((jsonString.startsWith('"') && jsonString.endsWith('"')) || 
+            (jsonString.startsWith("'") && jsonString.endsWith("'"))) {
+          jsonString = jsonString.slice(1, -1);
+        }
+        // Unescape any escaped quotes
+        jsonString = jsonString.replace(/\\"/g, '"').replace(/\\'/g, "'");
+        
+        const creds = JSON.parse(jsonString);
+        console.log(`✅ Parsed Firebase credentials for project: ${creds.project_id}`);
+        admin.initializeApp({
+          credential: admin.credential.cert({
+            projectId: creds.project_id,
+            clientEmail: creds.client_email,
+            privateKey: (creds.private_key || "").replace(/\\n/g, "\n"),
+          }),
+        });
+      } catch (parseError) {
+        console.error(`❌ Failed to parse FIREBASE_SERVICE_ACCOUNT_JSON`);
+        console.error(`❌ Error:`, (parseError as Error).message);
+        console.error(`❌ First 50 chars of value:`, json?.substring(0, 50));
+        throw new Error(
+          `Invalid FIREBASE_SERVICE_ACCOUNT_JSON format. Error: ${(parseError as Error).message}. ` +
+          `Make sure the environment variable contains valid JSON, not just the variable name.`
+        );
+      }
     } else {
-      // Fallback: separate vars
       const projectId = process.env.FIREBASE_PROJECT_ID;
       const clientEmail = process.env.FIREBASE_CLIENT_EMAIL;
       const privateKey = (process.env.FIREBASE_PRIVATE_KEY || "").replace(/\\n/g, "\n");
-
       if (!projectId || !clientEmail || !privateKey) {
-        throw new Error("Missing Firebase credentials. Set FIREBASE_SERVICE_ACCOUNT_JSON or the trio of FIREBASE_PROJECT_ID, FIREBASE_CLIENT_EMAIL, FIREBASE_PRIVATE_KEY.");
+        throw new Error(
+          "Missing Firebase credentials. Set FIREBASE_SERVICE_ACCOUNT_JSON or the trio of FIREBASE_PROJECT_ID, FIREBASE_CLIENT_EMAIL, FIREBASE_PRIVATE_KEY."
+        );
       }
-
+      console.log(`✅ Using separate Firebase credentials for project: ${projectId}`);
       admin.initializeApp({
-        credential: admin.credential.cert({
-          projectId,
-          clientEmail,
-          privateKey,
-        }),
+        credential: admin.credential.cert({ projectId, clientEmail, privateKey }),
       });
     }
   }
   return admin.firestore();
 }
 
-// 🔍 GET /api/join → quick health check
+// Send email notification
+async function sendNotificationEmail(data: {
+  audience: string;
+  email: string;
+  city: string;
+  discover?: string;
+  value?: string;
+  hope?: string;
+  challenge?: string;
+  businessName?: string;
+}) {
+  try {
+    const resend = new Resend(process.env.RESEND_API_KEY);
+    const notificationEmail = process.env.NOTIFICATION_EMAIL || "justinduncan@hopskip.co.za";
+    
+    const isBusiness = data.audience === "businesses";
+    const subject = `New ${isBusiness ? "Business" : "User"} Waitlist Signup - Hopskip`;
+    
+    const emailBody = `
+      <h2>New Waitlist Signup</h2>
+      <p><strong>Type:</strong> ${isBusiness ? "Business" : "User"}</p>
+      <p><strong>Email:</strong> ${data.email}</p>
+      <p><strong>City:</strong> ${data.city || "Not provided"}</p>
+      ${isBusiness && data.businessName ? `<p><strong>Business Name:</strong> ${data.businessName}</p>` : ""}
+      ${isBusiness && data.hope ? `<p><strong>What they hope Hopskip brings:</strong><br>${data.hope}</p>` : ""}
+      ${isBusiness && data.challenge ? `<p><strong>Biggest challenge:</strong><br>${data.challenge}</p>` : ""}
+      ${!isBusiness && data.discover ? `<p><strong>What they'd love to discover:</strong><br>${data.discover}</p>` : ""}
+      ${!isBusiness && data.value ? `<p><strong>What would make Hopskip valuable:</strong><br>${data.value}</p>` : ""}
+      <hr>
+      <p><small>Time: ${new Date().toLocaleString()}</small></p>
+    `;
+
+    await resend.emails.send({
+      from: "Hopskip <notifications@hopskip.co.za>",
+      to: notificationEmail,
+      subject: subject,
+      html: emailBody,
+    });
+  } catch (error) {
+    // Log error but don't fail the signup if email fails
+    console.error("Failed to send notification email:", error);
+  }
+}
+
+// Health check and test endpoint
 export async function GET() {
   try {
     const db = getFirestore();
     const now = admin.firestore.Timestamp.now();
-    return NextResponse.json({ ok: true, serverTime: now.toDate().toISOString() });
-  } catch (e: any) {
-    return NextResponse.json({ ok: false, error: e?.message || String(e) }, { status: 500 });
+    
+    // Try to read from collections to verify connection
+    const usersSnapshot = await db.collection("waitlist_users").limit(5).get();
+    const businessesSnapshot = await db.collection("waitlist_businesses").limit(5).get();
+    
+    const users = usersSnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+    const businesses = businessesSnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+    
+    return NextResponse.json({ 
+      ok: true, 
+      serverTime: now.toDate().toISOString(),
+      firestore: {
+        connected: true,
+        usersCount: usersSnapshot.size,
+        businessesCount: businessesSnapshot.size,
+        users: users,
+        businesses: businesses
+      }
+    });
+  } catch (e) {
+    return NextResponse.json({ 
+      ok: false, 
+      error: (e as Error).message,
+      stack: (e as Error).stack 
+    }, { status: 500 });
   }
 }
 
-// ✉️ POST /api/join → handle form submissions
+// Form handler
 export async function POST(req: Request) {
   try {
     const formData = await req.formData();
@@ -56,27 +139,116 @@ export async function POST(req: Request) {
     const audience = String(formData.get("audience") || "users"); // "users" | "businesses"
     const email = String(formData.get("email") || "");
     const city = String(formData.get("city") || "");
-    const discover = String(formData.get("discover") || "");
-    const value = String(formData.get("value") || "");
-    const hope = String(formData.get("hope") || "");
-    const challenge = String(formData.get("challenge") || "");
-    const honey = String(formData.get("_hp") || ""); // honeypot
+    const discover = String(formData.get("discover") || "");  // users
+    const value = String(formData.get("value") || "");        // users
+    const hope = String(formData.get("hope") || "");          // businesses
+    const challenge = String(formData.get("challenge") || "");// businesses
+    const businessName = String(formData.get("businessName") || ""); // businesses
+    const honey = String(formData.get("_hp") || "");          // honeypot
 
-    // validation
     if (!email || honey) {
+      console.log(`❌ Validation failed: email=${!!email}, honey=${!!honey}`);
       return NextResponse.redirect(new URL("/error", req.url), { status: 303 });
     }
 
+    console.log(`🔧 Initializing Firestore...`);
     const db = getFirestore();
+    
+    // Verify which project we're connected to
+    const app = admin.app();
+    const projectId = app.options.projectId;
+    console.log(`✅ Firestore initialized`);
+    console.log(`🏗️  Connected to Firebase project: ${projectId}`);
+    console.log(`📊 Database: Firestore`);
     const now = admin.firestore.Timestamp.now();
 
-    // Prevent duplicate signups by email
-    const existing = await db.collection("waitlist").where("email", "==", email).limit(1).get();
+    // Choose collection by audience
+    const collectionName =
+      audience === "businesses" ? "waitlist_businesses" : "waitlist_users";
+
+    console.log(`📝 Processing signup: ${email} (${audience})`);
+
+    // Prevent duplicates within that audience's collection
+    const existing = await db.collection(collectionName).where("email", "==", email).limit(1).get();
     if (!existing.empty) {
+      console.log(`⚠️ Duplicate email found: ${email} - redirecting to thanks`);
       return NextResponse.redirect(new URL("/thanks", req.url), { status: 303 });
     }
 
-    await db.collection("waitlist").add({
+    // Payloads are slightly different, but we keep a consistent core
+    const base = {
+      type: audience, // "users" | "businesses"
+      email: email.trim().toLowerCase(), // Normalize email
+      city: city.trim(),
+      ua: req.headers.get("user-agent") || "",
+      ip: req.headers.get("x-forwarded-for") || "",
+      createdAt: now,
+      updatedAt: now,
+      source: "landing-v1",
+    };
+    
+    console.log(`📋 Base payload created with timestamp:`, now.toDate().toISOString());
+
+    const payload =
+      audience === "businesses"
+        ? { ...base, hope, challenge, businessName }
+        : { ...base, discover, value };
+
+    console.log(`💾 Attempting to save to Firestore collection: ${collectionName}`);
+    console.log(`📦 Payload keys:`, Object.keys(payload));
+    console.log(`📦 Payload email:`, payload.email);
+    
+    try {
+      console.log(`💾 Saving to collection: ${collectionName}`);
+      console.log(`📦 Payload preview:`, { email, city, type: audience, hasDiscover: !!discover, hasValue: !!value });
+      
+      const docRef = await db.collection(collectionName).add(payload);
+      const docId = docRef.id;
+      console.log(`✅ Document reference created: ${collectionName}/${docId}`);
+      
+      // Wait a moment for Firestore to process
+      await new Promise(resolve => setTimeout(resolve, 100));
+      
+      // Verify it was saved by reading it back
+      const verifyDoc = await docRef.get();
+      if (verifyDoc.exists) {
+        const savedData = verifyDoc.data();
+        console.log(`✅ Verification successful: Document exists in Firestore`);
+        console.log(`📄 Saved data keys:`, Object.keys(savedData || {}));
+        console.log(`📧 Saved email:`, savedData?.email);
+        console.log(`🆔 Document ID: ${docId}`);
+        console.log(`🔗 Full path: ${collectionName}/${docId}`);
+      } else {
+        console.error(`❌ Verification failed: Document does not exist after save`);
+        console.error(`❌ Document ID was: ${docId}`);
+        throw new Error(`Document was not saved to Firestore`);
+      }
+      
+      // Also try querying by email to double-check
+      const queryCheck = await db.collection(collectionName)
+        .where("email", "==", email.trim().toLowerCase())
+        .limit(1)
+        .get();
+      
+      if (!queryCheck.empty) {
+        console.log(`✅ Query verification: Found document by email query`);
+        queryCheck.docs.forEach(doc => {
+          console.log(`📄 Query result - ID: ${doc.id}, Email: ${doc.data().email}`);
+        });
+      } else {
+        console.warn(`⚠️ Query verification: Could not find document by email query (might be timing issue)`);
+      }
+      
+    } catch (firestoreError) {
+      console.error(`❌ Firestore save error:`, firestoreError);
+      console.error(`❌ Error message:`, (firestoreError as Error).message);
+      console.error(`❌ Error code:`, (firestoreError as any).code);
+      console.error(`❌ Error stack:`, (firestoreError as Error).stack);
+      throw firestoreError; // Re-throw to be caught by outer catch
+    }
+
+    // Send email notification (non-blocking)
+    sendNotificationEmail({
       audience,
       email,
       city,
@@ -84,16 +256,13 @@ export async function POST(req: Request) {
       value,
       hope,
       challenge,
-      ua: req.headers.get("user-agent") || "",
-      ip: req.headers.get("x-forwarded-for") || "",
-      createdAt: now,
-      updatedAt: now,
-      source: "landing-v1",
-    });
+      businessName,
+    }).catch(err => console.error("Email notification error:", err));
 
     return NextResponse.redirect(new URL("/thanks", req.url), { status: 303 });
   } catch (err) {
-    console.error("Join route error:", err);
+    console.error("❌ Join route error:", err);
+    console.error("Error details:", JSON.stringify(err, null, 2));
     return NextResponse.redirect(new URL("/error", req.url), { status: 303 });
   }
 }
