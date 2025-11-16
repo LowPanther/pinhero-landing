@@ -100,20 +100,61 @@ async function sendNotificationEmail(data: {
 
 // Health check and test endpoint
 export async function GET() {
+  const logs: string[] = [];
+  const log = (msg: string) => {
+    console.log(msg);
+    logs.push(msg);
+  };
+  
   try {
+    log("🔧 Starting Firestore connection test...");
+    
     const db = getFirestore();
+    log("✅ Firestore instance created");
+    
+    // Verify which project we're connected to
+    const app = admin.app();
+    const projectId = app.options.projectId;
+    log(`🏗️ Connected to Firebase project: ${projectId}`);
+    
     const now = admin.firestore.Timestamp.now();
+    log(`⏰ Server time: ${now.toDate().toISOString()}`);
     
     // Try to read from collections to verify connection
+    log("📖 Reading waitlist_users collection...");
     const usersSnapshot = await db.collection("waitlist_users").limit(5).get();
-    const businessesSnapshot = await db.collection("waitlist_businesses").limit(5).get();
+    log(`✅ Found ${usersSnapshot.size} user documents`);
     
-    const users = usersSnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-    const businesses = businessesSnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+    log("📖 Reading waitlist_businesses collection...");
+    const businessesSnapshot = await db.collection("waitlist_businesses").limit(5).get();
+    log(`✅ Found ${businessesSnapshot.size} business documents`);
+    
+    const users = usersSnapshot.docs.map(doc => {
+      const data = doc.data();
+      return { 
+        id: doc.id, 
+        email: data.email,
+        city: data.city,
+        createdAt: data.createdAt?.toDate?.()?.toISOString() || 'unknown'
+      };
+    });
+    
+    const businesses = businessesSnapshot.docs.map(doc => {
+      const data = doc.data();
+      return { 
+        id: doc.id, 
+        email: data.email,
+        city: data.city,
+        businessName: data.businessName,
+        createdAt: data.createdAt?.toDate?.()?.toISOString() || 'unknown'
+      };
+    });
     
     return NextResponse.json({ 
       ok: true, 
       serverTime: now.toDate().toISOString(),
+      projectId: projectId,
+      logs: logs,
       firestore: {
         connected: true,
         usersCount: usersSnapshot.size,
@@ -123,10 +164,12 @@ export async function GET() {
       }
     });
   } catch (e) {
+    log(`❌ Error: ${(e as Error).message}`);
     return NextResponse.json({ 
       ok: false, 
       error: (e as Error).message,
-      stack: (e as Error).stack 
+      stack: (e as Error).stack,
+      logs: logs
     }, { status: 500 });
   }
 }
